@@ -1,0 +1,30 @@
+{% extends 'login.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+<form method="post" class="form-signin">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+    <img class="mb-3" src="{{ asset('build/images/logo.png') }} " alt="" width="200" height="200">
+    <h1 class="h3 mb-3 font-weight-normal">Connectez vous</h1>
+    <label for="inputUsername" class="sr-only">Identifiant</label>
+    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="Identifiant" required autofocus>
+    <label for="inputPassword" class="sr-only">Mot de passe</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}"
+    >
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Se souvenir de moi
+            </label>
+        </div>
+    <button class="btn btn-lg btn-block btn-primary" type="submit">
+        Connexion
+    </button>
+    <div><small>Vecteurs par <a href="https://fr.vecteezy.com">https://fr.vecteezy.com</a></small></div>
+</form>
+{% endblock %}
