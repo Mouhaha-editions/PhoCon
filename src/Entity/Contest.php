@@ -2,15 +2,12 @@
 
 namespace App\Entity;
 
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 
 /**
- * @ORM\Table(name="contest")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(fields={"username"}, message="There is already an account with this username")
+ * @ORM\Entity(repositoryClass="App\Repository\ContestRepository")
  */
 class Contest
 {
@@ -22,19 +19,138 @@ class Contest
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=false)
+     * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="text",  unique=false)
+     * @ORM\Column(type="text")
      */
     private $description;
 
     /**
-     * @ORM\Column(type="text",  unique=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="contests")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $cover;
+    private $master;
 
-    private $participants;
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Participation", mappedBy="contest")
+     */
+    private $participations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Loot", mappedBy="contest", orphanRemoval=true)
+     */
+    private $loots;
+
+    public function __construct()
+    {
+        $this->participations = new ArrayCollection();
+        $this->loots = new ArrayCollection();
+    }
+
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getMaster(): ?User
+    {
+        return $this->master;
+    }
+
+    public function setMaster(?User $master): self
+    {
+        $this->master = $master;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Participation[]
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): self
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations[] = $participation;
+            $participation->setContest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): self
+    {
+        if ($this->participations->contains($participation)) {
+            $this->participations->removeElement($participation);
+            // set the owning side to null (unless already changed)
+            if ($participation->getContest() === $this) {
+                $participation->setContest(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Loot[]
+     */
+    public function getLoots(): Collection
+    {
+        return $this->loots;
+    }
+
+    public function addLoot(Loot $loot): self
+    {
+        if (!$this->loots->contains($loot)) {
+            $this->loots[] = $loot;
+            $loot->setContest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoot(Loot $loot): self
+    {
+        if ($this->loots->contains($loot)) {
+            $this->loots->removeElement($loot);
+            // set the owning side to null (unless already changed)
+            if ($loot->getContest() === $this) {
+                $loot->setContest(null);
+            }
+        }
+
+        return $this;
+    }
 }

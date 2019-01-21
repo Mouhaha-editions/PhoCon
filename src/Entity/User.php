@@ -39,9 +39,20 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Contest", mappedBy="master", orphanRemoval=true)
+     */
+    private $contests;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Participation", mappedBy="author", orphanRemoval=true)
+     */
+    private $participations;
+
     public function __construct()
     {
         $this->participations = new ArrayCollection();
+        $this->contests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,5 +126,67 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|Contest[]
+     */
+    public function getContests(): Collection
+    {
+        return $this->contests;
+    }
+
+    public function addContest(Contest $contest): self
+    {
+        if (!$this->contests->contains($contest)) {
+            $this->contests[] = $contest;
+            $contest->setMaster($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContest(Contest $contest): self
+    {
+        if ($this->contests->contains($contest)) {
+            $this->contests->removeElement($contest);
+            // set the owning side to null (unless already changed)
+            if ($contest->getMaster() === $this) {
+                $contest->setMaster(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Participation[]
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): self
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations[] = $participation;
+            $participation->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): self
+    {
+        if ($this->participations->contains($participation)) {
+            $this->participations->removeElement($participation);
+            // set the owning side to null (unless already changed)
+            if ($participation->getAuthor() === $this) {
+                $participation->setAuthor(null);
+            }
+        }
+
+        return $this;
     }
 }
