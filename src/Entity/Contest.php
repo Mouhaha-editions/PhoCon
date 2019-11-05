@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ContestRepository")
@@ -43,6 +45,27 @@ class Contest
      * @ORM\OneToMany(targetEntity="App\Entity\Loot", mappedBy="contest", orphanRemoval=true)
      */
     private $loots;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $debut;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $fin;
+
+    /**
+     * @Assert\Image(
+     *     minWidth = 900,
+     *     maxWidth = 4000,
+     *     minHeight = 400,
+     *     maxHeight = 3000
+     * )
+     * @ORM\Column(type="text")
+     */
+    private $cover;
 
     public function __construct()
     {
@@ -150,6 +173,54 @@ class Contest
                 $loot->setContest(null);
             }
         }
+
+        return $this;
+    }
+
+    public function serialize()
+    {
+        return [
+            "id" => $this->getId(),
+            "title" => $this->getTitle(),
+            "description" => $this->getDescription(),
+//            "loots"=> $this->getLoots(),
+//            "master"=> $this->getMaster(),
+//            "participations"=> $this->getParticipations(),
+        ];
+    }
+
+    public function getDebut(): ?\DateTimeInterface
+    {
+        return $this->debut;
+    }
+
+    public function setDebut(\DateTimeInterface $debut): self
+    {
+        $this->debut = $debut;
+
+        return $this;
+    }
+
+    public function getFin(): ?\DateTimeInterface
+    {
+        return $this->fin;
+    }
+
+    public function setFin(\DateTimeInterface $fin): self
+    {
+        $this->fin = $fin;
+
+        return $this;
+    }
+
+    public function getCover(): ?string
+    {
+        return $this->cover;
+    }
+
+    public function setCover(File $cover): self
+    {
+        $this->cover = $cover;
 
         return $this;
     }

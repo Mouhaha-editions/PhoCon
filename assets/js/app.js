@@ -10,8 +10,6 @@ import '../css/global.scss';
 import '../css/app.css';
 const logoPath = require('../images/logo.png');
 //var html = `<img src="${logoPath}">`;
-
-
 import $ from 'jquery';
 import 'bootstrap';
 import 'cropperjs';

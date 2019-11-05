@@ -35,6 +35,16 @@ class Participation
      */
     private $contest;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Picture", mappedBy="participations")
+     */
+    private $pictures;
+
+    public function __construct()
+    {
+        $this->pictures = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -98,6 +108,34 @@ class Participation
     public function setContest(?Contest $contest): self
     {
         $this->contest = $contest;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Picture[]
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(Picture $picture): self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->addParticipation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(Picture $picture): self
+    {
+        if ($this->pictures->contains($picture)) {
+            $this->pictures->removeElement($picture);
+            $picture->removeParticipation($this);
+        }
 
         return $this;
     }
