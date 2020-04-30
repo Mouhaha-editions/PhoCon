@@ -23,7 +23,7 @@
         "babel": "^6.23.0",
         "babel-plugin-transform-class-properties": "^6.24.1",
         "bootstrap": "^4.3.1",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "jquery-bridget": "^2.0.1",
         "masonry-layout": "^4.2.2",
         "popper": "^1.0.1",
