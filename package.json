@@ -3,7 +3,7 @@
         "@babel/preset-react": "^7.6.3",
         "@symfony/webpack-encore": "^0.28.0",
         "cropperjs": "^1.4.3",
-        "node-sass": "^4.11.0",
+        "node-sass": "^7.0.0",
         "sass-loader": "7.0.1",
         "vue": "^2.5.22",
         "vue-loader": "15.0.11",
